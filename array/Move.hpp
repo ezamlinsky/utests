@@ -10,6 +10,47 @@
 # pragma	once
 
 //****************************************************************************//
+//      Test the move function                                                //
+//****************************************************************************//
+template <typename T>
+void TestMove (
+	void (*func)(T target[], T source[], size_t size),
+	void (*ref)(T target[], T source[], size_t size)
+){
+	// Create an array of the target size
+	RandomArray <T> array (BUFFER_SIZE, SEED, MAX_VALUE);
+
+	// Run the test in many rounds with a random offset and element count
+	for (size_t i = 0; i < ROUNDS; i++) {
+
+		// Get a random offset inside the arrays and a random number of elements
+		// to work with
+		size_t toffset = array.Offset ();
+		size_t soffset = array.Offset ();
+		size_t tcount = array.Count (toffset);
+		size_t scount = array.Count (soffset);
+		size_t count = min (tcount, scount);
+
+		// Do many tries with the same offset and element count, but different data
+		for (size_t j = 0; j < TRIES; j++) {
+
+			// Populate the array with random data
+			array.Populate ();
+
+			// Make a copy for the reference implementation of the function
+			RandomArray <T> reference (array);
+
+			// Apply the operation to the array data. Both the testing and the reference
+			func (array.Data() + toffset, array.Data() + soffset, count);
+			ref (reference.Data() + toffset, reference.Data() + soffset, count);
+
+			// Compare arrays for different elements
+			array.Compare (reference, EPSILON);
+		}
+	}
+}
+
+//****************************************************************************//
 //      Reference implementation of the function                              //
 //****************************************************************************//
 template <typename T>
