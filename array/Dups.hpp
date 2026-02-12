@@ -2,7 +2,7 @@
 ################################################################################
 # Encoding: UTF-8                                                  Tab size: 4 #
 #                                                                              #
-#                UNIT TESTS FOR ARRAY UNIQUE VALUES EXTRACTORS                 #
+#               UNIT TESTS FOR ARRAY DUPLICATE VALUES EXTRACTORS               #
 #                                                                              #
 # Ordnung muss sein!                             Moveleft (Ɔ) Eugene Zamlinsky #
 ################################################################################
@@ -13,9 +13,9 @@
 //      Test function for regular operations                                  //
 //****************************************************************************//
 template <typename T>
-void TestUnique (
-	size_t (*func)(T unique[], const T array[], size_t size),
-	size_t (*ref)(T unique[], const T array[], size_t size)
+void TestDuplicates (
+	size_t (*func)(T unique[], size_t count[], const T array[], size_t size),
+	size_t (*ref)(T unique[], size_t count[], const T array[], size_t size)
 ){
 	// Create an array of the target size
 	RandomArray <T> array (BUFFER_SIZE, SEED, MAX_VALUE);
@@ -41,15 +41,20 @@ void TestUnique (
 			RandomArray <T> func_output (BUFFER_SIZE, SEED, MAX_VALUE);
 			RandomArray <T> ref_output (BUFFER_SIZE, SEED, MAX_VALUE);
 
+			// Create arrays for counters
+			RandomArray <size_t> func_counter (BUFFER_SIZE, SEED, MAX_VALUE);
+			RandomArray <size_t> ref_counter (BUFFER_SIZE, SEED, MAX_VALUE);
+
 			// Apply the operation to the array data. Both the testing and the reference
-			size_t computed_value = func (func_output.Data(), array.Data() + offset, count);
-			size_t correct_value = ref (ref_output.Data(), array.Data() + offset, count);
+			size_t computed_value = func (func_output.Data(), func_counter.Data(), array.Data() + offset, count);
+			size_t correct_value = ref (ref_output.Data(), ref_counter.Data(), array.Data() + offset, count);
 
 			// Compare the result values
 			array.CheckResult (computed_value, correct_value, EPSILON);
 
 			// Compare arrays for different elements
 			func_output.Compare (ref_output, EPSILON, correct_value);
+			func_counter.Compare (ref_counter, EPSILON, correct_value);
 		}
 	}
 }
@@ -57,9 +62,9 @@ void TestUnique (
 //****************************************************************************//
 //      Test function for object array operations                             //
 //****************************************************************************//
-void TestUniqueObj (
-	size_t (*func)(const void* unique[], const void* array[], size_t size, Cmp func),
-	size_t (*ref)(sint64_t unique[], const sint64_t array[], size_t size)
+void TestDuplicatesObj (
+	size_t (*func)(const void* unique[], size_t count[], const void* array[], size_t size, Cmp func),
+	size_t (*ref)(sint64_t unique[], size_t count[], const sint64_t array[], size_t size)
 ){
 	// Create an array of the target size
 	RandomArray <sint64_t> array (BUFFER_SIZE, SEED, MAX_VALUE);
@@ -85,15 +90,20 @@ void TestUniqueObj (
 			RandomArray <sint64_t> func_output (BUFFER_SIZE, SEED, MAX_VALUE);
 			RandomArray <sint64_t> ref_output (BUFFER_SIZE, SEED, MAX_VALUE);
 
+			// Create arrays for counters
+			RandomArray <size_t> func_counter (BUFFER_SIZE, SEED, MAX_VALUE);
+			RandomArray <size_t> ref_counter (BUFFER_SIZE, SEED, MAX_VALUE);
+
 			// Apply the operation to the array data. Both the testing and the reference
-			size_t computed_value = func (reinterpret_cast <const void**> (func_output.Data()), reinterpret_cast <const void**> (array.Data() + offset), count, KeyCmp);
-			size_t correct_value = ref (ref_output.Data(), array.Data() + offset, count);
+			size_t computed_value = func (reinterpret_cast <const void**> (func_output.Data()), func_counter.Data(), reinterpret_cast <const void**> (array.Data() + offset), count, KeyCmp);
+			size_t correct_value = ref (ref_output.Data(), ref_counter.Data(), array.Data() + offset, count);
 
 			// Compare the result values
 			array.CheckResult (computed_value, correct_value, EPSILON);
 
 			// Compare arrays for different elements
 			func_output.Compare (ref_output, EPSILON, correct_value);
+			func_counter.Compare (ref_counter, EPSILON, correct_value);
 		}
 	}
 }
@@ -102,19 +112,26 @@ void TestUniqueObj (
 //      Reference implementation of the functions                             //
 //****************************************************************************//
 template <typename T>
-size_t Unique (T unique[], const T array[], size_t size){
+size_t Duplicates (T unique[], size_t count[], const T array[], size_t size){
 	if (size) {
 		T value = array[0];
+		size_t total = 1;
 		size_t usize = 0;
 		for (size_t i = 1; i < size; i++) {
 			if (array[i] != value) {
 				unique[0] = value;
 				unique++;
+				count[0] = total;
+				count++;
 				value = array[i];
+				total = 1;
 				usize++;
 			}
+			else
+				total++;
 		}
 		unique[0] = value;
+		count[0] = total;
 		usize++;
 		return usize;
 	}
@@ -127,39 +144,39 @@ size_t Unique (T unique[], const T array[], size_t size){
 //****************************************************************************//
 
 //============================================================================//
-//      Unique elements                                                       //
+//      Duplicates elements                                                   //
 //============================================================================//
-void TestUnique (void) {
+void TestDuplicates (void) {
 
 	// Show the stage info
-	StageInfo ("Array::Unique", BUFFER_SIZE, ROUNDS, TRIES);
+	StageInfo ("Array::Duplicates", BUFFER_SIZE, ROUNDS, TRIES);
 
 	// Unsigned integer types
-	TestUnique <uint8_t> (Array::Unique, Unique);
-	TestUnique <uint16_t> (Array::Unique, Unique);
-	TestUnique <uint32_t> (Array::Unique, Unique);
-	TestUnique <uint64_t> (Array::Unique, Unique);
+	TestDuplicates <uint8_t> (Array::Duplicates, Duplicates);
+	TestDuplicates <uint16_t> (Array::Duplicates, Duplicates);
+	TestDuplicates <uint32_t> (Array::Duplicates, Duplicates);
+	TestDuplicates <uint64_t> (Array::Duplicates, Duplicates);
 
 	// Signed integer types
-	TestUnique <sint8_t> (Array::Unique, Unique);
-	TestUnique <sint16_t> (Array::Unique, Unique);
-	TestUnique <sint32_t> (Array::Unique, Unique);
-	TestUnique <sint64_t> (Array::Unique, Unique);
+	TestDuplicates <sint8_t> (Array::Duplicates, Duplicates);
+	TestDuplicates <sint16_t> (Array::Duplicates, Duplicates);
+	TestDuplicates <sint32_t> (Array::Duplicates, Duplicates);
+	TestDuplicates <sint64_t> (Array::Duplicates, Duplicates);
 
 	// Other types
-	TestUnique <size_t> (Array::Unique, Unique);
+	TestDuplicates <size_t> (Array::Duplicates, Duplicates);
 }
 
 //============================================================================//
-//      Unique objects                                                        //
+//      Duplicates objects                                                    //
 //============================================================================//
-void TestUniqueObj (void) {
+void TestDuplicatesObj (void) {
 
 	// Show the stage info
-	StageInfo ("Array::UniqueObj", BUFFER_SIZE, ROUNDS, TRIES);
+	StageInfo ("Array::DuplicatesObj", BUFFER_SIZE, ROUNDS, TRIES);
 
 	// Object array
-	TestUniqueObj (Array::UniqueObj, Unique);
+	TestDuplicatesObj (Array::DuplicatesObj, Duplicates);
 }
 
 /*
