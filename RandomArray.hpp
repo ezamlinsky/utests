@@ -184,8 +184,10 @@ public:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 //      Check two arrays for different elements                               //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
-	void Compare (const RandomArray &ref, double epsilon) {
-		for (size_t i = 0; i < size; i++) {
+	void Compare (const RandomArray &ref, double epsilon, size_t elements = 0) {
+		if (elements == 0)
+			elements = size;
+		for (size_t i = 0; i < elements; i++) {
 			if (fabs (data[i] - ref.data[i]) > fabs (epsilon * ref.data[i])) {
 				const string type_name = DemangleTypeName (typeid (T).name());
 				throw runtime_error ("    Mismatch <" + type_name +
