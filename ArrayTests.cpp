@@ -26,6 +26,7 @@
 # include	"array/Replace.hpp"
 # include	"array/Reverse.hpp"
 # include	"array/Unique.hpp"
+# include	"array/Dups.hpp"
 
 //****************************************************************************//
 //      Run all the unit-test functions                                       //
@@ -167,6 +168,10 @@ try {
 	// Unique values
 	TestUnique();
 	TestUniqueObj();
+
+	// Duplicate elements
+	TestDuplicates();
+	TestDuplicatesObj();
 
 	// Everything is OK
 	cout << "\nSUCCESS: All the tests have been passed!" << endl;
