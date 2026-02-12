@@ -25,6 +25,7 @@
 # include	"array/BinCount.hpp"
 # include	"array/Replace.hpp"
 # include	"array/Reverse.hpp"
+# include	"array/Unique.hpp"
 
 //****************************************************************************//
 //      Run all the unit-test functions                                       //
@@ -162,6 +163,10 @@ try {
 
 	// Order reversing
 	TestReverse();
+
+	// Unique values
+	TestUnique();
+	TestUniqueObj();
 
 	// Everything is OK
 	cout << "\nSUCCESS: All the tests have been passed!" << endl;
