@@ -52,7 +52,7 @@ void TestFunc0 (
 	T (*func)(const T target[], const T source[], size_t size),
 	T (*ref)(const T target[], const T source[], size_t size)
 ){
-	// Create an array of the target size
+	// Create arrays of the target size
 	RandomArray <T> target (BUFFER_SIZE, SEED, MAX_VALUE);
 	RandomArray <T> source (BUFFER_SIZE, SEED, MAX_VALUE);
 
@@ -137,7 +137,7 @@ void TestFunc2 (
 	T (*func)(const T target[], const T source[], size_t size, T value1, T value2),
 	T (*ref)(const T target[], const T source[], size_t size, T value1, T value2)
 ){
-	// Create an array of the target size
+	// Create arrays of the target size
 	RandomArray <T> target (BUFFER_SIZE, SEED, MAX_VALUE);
 	RandomArray <T> source (BUFFER_SIZE, SEED, MAX_VALUE);
 
@@ -152,7 +152,7 @@ void TestFunc2 (
 		size_t scount = source.Count (soffset);
 		size_t count = min (tcount, scount);
 
-		// Create a random scalar values for the test
+		// Create random scalar values for the test
 		T value1 = target.RandomValue();
 		T value2 = source.RandomValue();
 

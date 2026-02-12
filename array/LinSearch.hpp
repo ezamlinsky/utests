@@ -78,7 +78,7 @@ void TestLinObjSearch (
 		size_t count = array.Count (offset);
 
 		// Create a random scalar value for the test
-		size_t value = array.RandomValue();
+		sint64_t value = array.RandomValue();
 
 		// Do many tries with the same offset and element count, but different data
 		for (size_t j = 0; j < TRIES; j++) {
