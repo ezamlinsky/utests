@@ -4,7 +4,7 @@
 #                                                                              #
 #                  UNIT TESTS FOR ARRAY MIN AND MAX FUNCTIONS                  #
 #                                                                              #
-# Ordnung muss sein!                             Moveleft (Ɔ) Eugene Zamlinsky #
+# Ordnung muss sein!                             Copyleft (Ɔ) Eugene Zamlinsky #
 ################################################################################
 */
 # pragma	once

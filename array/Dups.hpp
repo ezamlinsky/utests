@@ -4,7 +4,7 @@
 #                                                                              #
 #               UNIT TESTS FOR ARRAY DUPLICATE VALUES EXTRACTORS               #
 #                                                                              #
-# Ordnung muss sein!                             Moveleft (Ɔ) Eugene Zamlinsky #
+# Ordnung muss sein!                             Copyleft (Ɔ) Eugene Zamlinsky #
 ################################################################################
 */
 # pragma	once
