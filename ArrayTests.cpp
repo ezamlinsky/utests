@@ -28,6 +28,9 @@
 # include	"array/Unique.hpp"
 # include	"array/Dups.hpp"
 
+
+# include	"array/RadixSort.hpp"
+
 //****************************************************************************//
 //      Run all the unit-test functions                                       //
 //****************************************************************************//
@@ -172,6 +175,12 @@ try {
 	// Duplicate elements
 	TestDuplicates();
 	TestDuplicatesObj();
+
+	// Radix sort
+	TestRadixSortAsc();
+	TestRadixSortDsc();
+	TestRadixSortKeyAsc();
+	TestRadixSortKeyDsc();
 
 	// Everything is OK
 	cout << "\nSUCCESS: All the tests have been passed!" << endl;
