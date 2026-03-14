@@ -91,6 +91,15 @@ public:
 			data[i] = source.data[i];
 	}
 
+	template <typename X>
+	RandomArray (const RandomArray <X> &source)
+	:	RandomArray (source.Size(), 0, 0)
+	{
+		const X* sdata = source.Data();
+		for (size_t i = 0; i < size; i++)
+			data[i] = static_cast <T> (sdata[i]);
+	}
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 //      Destructor                                                            //
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -104,6 +113,16 @@ public:
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
 	T* Data (void) {
 		return data;
+	}
+	const T* Data (void) const {
+		return data;
+	}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//      Array size                                                            //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+	size_t Size (void) const {
+		return size;
 	}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -133,7 +152,10 @@ public:
 
 			// Floating-point types
 			for (size_t i = 0; i < size; i++)
-				data[i] = uniform (*generator) + uniform (*generator) / static_cast <T> (max_value);
+				if (i % 2)
+					data[i] = -uniform (*generator) + uniform (*generator) / static_cast <T> (max_value);
+				else
+					data[i] = uniform (*generator) + uniform (*generator) / static_cast <T> (max_value);
 		}
 	}
 
@@ -179,6 +201,24 @@ public:
 		// Generate a random count within the range [0, size - offset]
 		uniform_int_distribution <size_t> len_dist (0, size - offset);
 		return len_dist (*generator);
+	}
+
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+//      Check If connected array matches the original array                   //
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
+	template <typename X>
+	void CheckValues (const RandomArray <X> &ref, size_t elements = 0) {
+		const X* rdata = ref.Data();
+		if (elements == 0)
+			elements = size;
+		for (size_t i = 0; i < elements; i++) {
+			if (data[i] != static_cast <T> (rdata[i])) {
+				const string type_name = DemangleTypeName (typeid (T).name());
+				throw runtime_error ("    Mismatch <" + type_name +
+				"> at [" + to_string (i) +	"]: Got '" + to_string (data[i]) +
+				"' Expected '" + to_string (rdata[i]) + "'");
+			}
+		}
 	}
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
