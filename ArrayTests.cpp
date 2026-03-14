@@ -27,9 +27,10 @@
 # include	"array/Reverse.hpp"
 # include	"array/Unique.hpp"
 # include	"array/Dups.hpp"
-
-
+# include	"array/QuickSort.hpp"
+# include	"array/MergeSort.hpp"
 # include	"array/RadixSort.hpp"
+# include	"array/Hash.hpp"
 
 //****************************************************************************//
 //      Run all the unit-test functions                                       //
@@ -176,11 +177,31 @@ try {
 	TestDuplicates();
 	TestDuplicatesObj();
 
+	// Quick sort
+	TestQuickSortAsc();
+	TestQuickSortDsc();
+	TestQuickSortKeyAsc();
+	TestQuickSortKeyDsc();
+	TestQuickSortObjAsc();
+	TestQuickSortObjDsc();
+
+	// Merge sort
+	TestMergeSortAsc();
+	TestMergeSortDsc();
+	TestMergeSortKeyAsc();
+	TestMergeSortKeyDsc();
+	TestMergeSortObjAsc();
+	TestMergeSortObjDsc();
+
 	// Radix sort
 	TestRadixSortAsc();
 	TestRadixSortDsc();
 	TestRadixSortKeyAsc();
 	TestRadixSortKeyDsc();
+
+	// Array hashing
+	TestHash32();
+	TestHash64();
 
 	// Everything is OK
 	cout << "\nSUCCESS: All the tests have been passed!" << endl;
