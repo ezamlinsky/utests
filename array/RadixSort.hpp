@@ -41,7 +41,7 @@ void TestRadixSort (
 			RandomArray <T> temp (BUFFER_SIZE, SEED, MAX_VALUE);
 
 			// Apply the operation to the array data. Both the testing and the reference
-			func (array.Data() + offset, temp.Data(), count);
+			func (array.Data() + offset, temp.Data() + offset, count);
 			ref (reference.Data() + offset, count);
 
 			// Compare arrays for different elements
@@ -80,15 +80,18 @@ void TestRadixSortKey (
 
 			// Create temporary arrays needed for the sort
 			RandomArray <T> temp (BUFFER_SIZE, SEED, MAX_VALUE);
-			RandomArray <size_t> ptr (BUFFER_SIZE, SEED, MAX_VALUE);
+			RandomArray <size_t> ptr (array);
 			RandomArray <size_t> tptr (BUFFER_SIZE, SEED, MAX_VALUE);
 
 			// Apply the operation to the array data. Both the testing and the reference
-			func (array.Data() + offset, reinterpret_cast <const void**> (ptr.Data()), temp.Data(), reinterpret_cast <const void**> (tptr.Data()), count);
+			func (array.Data() + offset, reinterpret_cast <const void**> (ptr.Data() + offset), temp.Data(), reinterpret_cast <const void**> (tptr.Data()), count);
 			ref (reference.Data() + offset, count);
 
 			// Compare arrays for different elements
 			array.Compare (reference, EPSILON);
+
+			// Check the connection between keys and values
+			ptr.CheckValues (array);
 		}
 	}
 }
