@@ -30,6 +30,8 @@
 # include	"array/QuickSort.hpp"
 # include	"array/MergeSort.hpp"
 # include	"array/RadixSort.hpp"
+# include	"array/Compare.hpp"
+# include	"array/Check.hpp"
 # include	"array/Hash.hpp"
 
 //****************************************************************************//
@@ -198,6 +200,14 @@ try {
 	TestRadixSortDsc();
 	TestRadixSortKeyAsc();
 	TestRadixSortKeyDsc();
+
+	// Comparison of arrays
+	TestCompare();
+	TestCompareObj();
+
+	// Checks
+	TestCheckDiff();
+	TestCheckDiffObj();
 
 	// Array hashing
 	TestHash32();
