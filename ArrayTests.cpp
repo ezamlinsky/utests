@@ -208,6 +208,14 @@ try {
 	// Checks
 	TestCheckDiff();
 	TestCheckDiffObj();
+	TestCheckDup();
+	TestCheckDupObj();
+	TestCheckSortAsc();
+	TestCheckSortObjAsc();
+	TestCheckSortDsc();
+	TestCheckSortObjDsc();
+	TestCheckInf();
+	TestCheckNaN();
 
 	// Array hashing
 	TestHash32();
